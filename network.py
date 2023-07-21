@@ -47,16 +47,16 @@ class Position_Attention(nn.Module):
 
     def forward(self, f0):                      # f0=[B 128 128 128]
         f0 = self.PA_module.conv0(f0)           # [B 8 128 128]
-        f = self.PA_module.GAP(f0)              # output=[B 1 128 128]
-        f = self.PA_module.MaxPool(f)           # output=[B 1 64 64]
-        f_conv1 = self.PA_module.conv1(f)       # output=[B 8 64 64]
-        f = self.PA_module.AvgPool(f_conv1)     # output=[B 8 32 32]
-        f = self.PA_module.conv2(f)             # output=[B 16 32 32]
-        f = self.PA_module.subpixel_conv1(f)    # output=[B 4 64 64]   # subpixel:通道数/4 W*2 H*2
+        f = self.PA_module.GAP(f0)              # results=[B 1 128 128]
+        f = self.PA_module.MaxPool(f)           # results=[B 1 64 64]
+        f_conv1 = self.PA_module.conv1(f)       # results=[B 8 64 64]
+        f = self.PA_module.AvgPool(f_conv1)     # results=[B 8 32 32]
+        f = self.PA_module.conv2(f)             # results=[B 16 32 32]
+        f = self.PA_module.subpixel_conv1(f)    # results=[B 4 64 64]   # subpixel:通道数/4 W*2 H*2
         f = F.interpolate(f, f_conv1.shape[2:])
-        f = torch.cat((f_conv1, f), dim = 1)    # output=[B 12 64 64]
-        f = self.PA_module.conv_k1(f)           # output=[B 4 64 64]
-        f = self.PA_module.subpixel_conv2(f)    # output=[B 1 128 128]
+        f = torch.cat((f_conv1, f), dim = 1)    # results=[B 12 64 64]
+        f = self.PA_module.conv_k1(f)           # results=[B 4 64 64]
+        f = self.PA_module.subpixel_conv2(f)    # results=[B 1 128 128]
         f = F.interpolate(f, f0.shape[2:])
         w = self.PA_module.sigmoid(f)
         return w

@@ -15,7 +15,7 @@ parser.add_argument('--dir_val', type=str, default='val_data/',
                     help='val dataset name')
 parser.add_argument('--model_pth', type=str, default='model/model_fuse.pth',
                     help='val dataset name')
-parser.add_argument('--save_img', type=str, default='output_results/',
+parser.add_argument('--save_img', type=str, default='results/',
                     help='val dataset name')
 
 parser.add_argument('--n_feats', type=int, default=128,

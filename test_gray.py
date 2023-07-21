@@ -4,7 +4,7 @@ import torch.utils.data as data
 from torchvision.transforms import Compose, ToTensor
 from dataset import MEFdataset
 from option import args
-from sci import MEF_Network
+from network import MEF_Network
 from utils import saveImage
 
 
