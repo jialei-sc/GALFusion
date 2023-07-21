@@ -3,7 +3,6 @@ from utils import SSIM, TV_Loss
 from option import args
 
 
-
 class ContentLoss(nn.Module):
     def __init__(self):
         super(ContentLoss, self).__init__()

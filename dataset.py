@@ -4,6 +4,7 @@ from PIL import Image
 from option import args
 
 
+
 class MEFdataset(data.Dataset):
     def __init__(self, dir_data, transform):
         super(MEFdataset, self).__init__()

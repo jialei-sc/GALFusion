@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 
 
+
 def batched_index_select(values, indices):
     last_dim = values.shape[-1]
     return values.gather(1, indices[:, :, None].expand(-1, -1, last_dim))
