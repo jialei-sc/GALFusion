@@ -1,6 +1,6 @@
 # GALFusion
 
-This is the official code for the paper "GALFusion: Multi-Exposure Image Fusion via a Global–Local Aggregation Learning Network".
+This is the official code for the paper "GALFusion: Multi-Exposure Image Fusion via a Global–Local Aggregation Learning Network".[[*Paper*]](https://ieeexplore.ieee.org/abstract/document/10106641)
 
 ## Environment Preparing
 

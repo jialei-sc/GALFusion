@@ -1,9 +1,9 @@
 clc;
 clear all;
-A_dir = 'D:\数据集\MSRS\MSRS\MSRS-pre-segmentation-data\MSRS-data\vi';
-save_dir_A_Y = 'D:\数据集\MSRS\MSRS\MSRS-pre-segmentation-data\MSRS-data\vi-y-cb-cr\Y\';
-save_dir_A_Cb = 'D:\数据集\MSRS\MSRS\MSRS-pre-segmentation-data\MSRS-data\vi-y-cb-cr\Cb\';
-save_dir_A_Cr = 'D:\数据集\MSRS\MSRS\MSRS-pre-segmentation-data\MSRS-data\vi-y-cb-cr\Cr\';
+A_dir = 'D:\MSRS-data\vi';
+save_dir_A_Y = 'D:\MSRS-data\vi-y-cb-cr\Y\';
+save_dir_A_Cb = 'D:\MSRS-data\vi-y-cb-cr\Cb\';
+save_dir_A_Cr = 'D:\MSRS-data\vi-y-cb-cr\Cr\';
  if exist(save_dir_A_Y,'dir')==0
 	mkdir(save_dir_A_Y);
  end

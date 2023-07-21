@@ -7,8 +7,7 @@ import math
 
 
 class ENLCA(nn.Module):
-    def __init__(self, channel=128, reduction=2, ksize=3, scale=3, stride=1, softmax_scale=10, average=True,
-                 conv=common.default_conv, res_scale=0.1):
+    def __init__(self, channel=128, reduction=2, conv=common.default_conv, res_scale=0.1):
         super(ENLCA, self).__init__()
         self.conv_match1 = common.BasicBlock(conv, channel, channel // reduction, 1, bn=False, act=None)
         self.conv_match2 = common.BasicBlock(conv, channel, channel // reduction, 1, bn=False, act=None)

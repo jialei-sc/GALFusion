@@ -19,8 +19,8 @@ class Feature_Extraction(nn.Module):
         )
 
     def forward(self,oe,ue):
-        x_cat = torch.cat((oe,ue),1) # 2
-        x = self.conv(x_cat)   #[B 128 128 128]
+        x_cat = torch.cat((oe,ue),1)
+        x = self.conv(x_cat)
         return x
 
 
@@ -45,18 +45,18 @@ class Position_Attention(nn.Module):
             ('sigmoid', nn.Sigmoid())
         ]))
 
-    def forward(self, f0):                      # f0=[B 128 128 128]
-        f0 = self.PA_module.conv0(f0)           # [B 8 128 128]
-        f = self.PA_module.GAP(f0)              # results=[B 1 128 128]
-        f = self.PA_module.MaxPool(f)           # results=[B 1 64 64]
-        f_conv1 = self.PA_module.conv1(f)       # results=[B 8 64 64]
-        f = self.PA_module.AvgPool(f_conv1)     # results=[B 8 32 32]
-        f = self.PA_module.conv2(f)             # results=[B 16 32 32]
-        f = self.PA_module.subpixel_conv1(f)    # results=[B 4 64 64]   # subpixel:通道数/4 W*2 H*2
+    def forward(self, f0):
+        f0 = self.PA_module.conv0(f0)
+        f = self.PA_module.GAP(f0)
+        f = self.PA_module.MaxPool(f)
+        f_conv1 = self.PA_module.conv1(f)
+        f = self.PA_module.AvgPool(f_conv1)
+        f = self.PA_module.conv2(f)
+        f = self.PA_module.subpixel_conv1(f)
         f = F.interpolate(f, f_conv1.shape[2:])
-        f = torch.cat((f_conv1, f), dim = 1)    # results=[B 12 64 64]
-        f = self.PA_module.conv_k1(f)           # results=[B 4 64 64]
-        f = self.PA_module.subpixel_conv2(f)    # results=[B 1 128 128]
+        f = torch.cat((f_conv1, f), dim = 1)
+        f = self.PA_module.conv_k1(f)
+        f = self.PA_module.subpixel_conv2(f)
         f = F.interpolate(f, f0.shape[2:])
         w = self.PA_module.sigmoid(f)
         return w
@@ -82,18 +82,18 @@ class Fusion_Network(nn.Module):
             nn.Conv2d(64, 1, 1))
 
     def forward(self,oe,ue):
-        fea_extr = self.fea_extr(oe,ue)   # [B 128 128 128]
+        fea_extr = self.fea_extr(oe,ue)
 
         # collaborative aggregation module
-        global_seq = self.enlca(fea_extr)  # [B 128 128 128]
-        local_map = self.position_attention(fea_extr) # [B 1 128 128]
-        local_seq = local_map * fea_extr # [B 128 128 128]
+        global_seq = self.enlca(fea_extr)
+        local_map = self.position_attention(fea_extr)
+        local_seq = local_map * fea_extr
 
         # fusion
-        fusion_cat = torch.cat((fea_extr,local_seq,global_seq),1)  # [B 384 128 128]
-        fused_m1 = self.fusion_layer1(fusion_cat)  # [B 128 H W]
+        fusion_cat = torch.cat((fea_extr,local_seq,global_seq),1)
+        fused_m1 = self.fusion_layer1(fusion_cat)
         fused_m2 = fused_m1 + fea_extr
-        fused_m = torch.tanh(self.fusion_layer2(fused_m2)) # [B 1 128 128]
+        fused_m = torch.tanh(self.fusion_layer2(fused_m2))
         # fused_m = fused_m / 2 + 0.5
         # fused_oe = oe * fused_m
         # fused_ue = ue * fused_m
@@ -158,20 +158,20 @@ class EnhanceNetwork(nn.Module):
         # out = torch.zeros([b,1,h,w],dtype=float).to(device)
         out = torch.zeros([b, 1, h, w]).to(device)
 
-        x = torch.cat((input,out),1)   # 33
-        x = self.conv1(x)  # 32
-        x = self.conv2(x)  # 32
-        out = self.conv3(x)  # 1
+        x = torch.cat((input,out),1)
+        x = self.conv1(x)
+        x = self.conv2(x)
+        out = self.conv3(x)
 
-        x = torch.cat((input,out),1)  # 33
-        x = self.conv4(x)  # 32
-        x = self.conv5(x)  # 32
-        out = self.conv6(x)  # 1
+        x = torch.cat((input,out),1)
+        x = self.conv4(x)
+        x = self.conv5(x)
+        out = self.conv6(x)
 
-        x = torch.cat((input, out), 1)  # 33
-        x = self.conv7(x)  # 32
-        x = self.conv8(x)  # 32
-        out = self.conv9(x)  # 1
+        x = torch.cat((input, out), 1)
+        x = self.conv7(x)
+        x = self.conv8(x)
+        out = self.conv9(x)
         return out
 
 
@@ -187,9 +187,9 @@ class MEF_Network(nn.Module):
 
     def forward(self,oe,ue):
         f_m, f_ext = self.f_net(oe,ue)
-        t = self.conv_i1(f_ext)  # 128---64
-        map = self.e_net(t) # 64----1
-        map = map / 2 + 0.5   # 仅修改此处
+        t = self.conv_i1(f_ext)
+        map = self.e_net(t)
+        map = map / 2 + 0.5
         refined_out = map * f_m
 
         return refined_out
